@@ -13,7 +13,7 @@ import com.orangehrm.org.pim.Employee;
 
 public class AppUtilities extends Core{
 	
-	Logger logg = Logger.getLogger(this.getClass());
+	//Logger logg = Logger.getLogger(this.getClass());
 	
 	static String ObjectRepoFilePath = "./ObjRepo.properties"; 
 	
