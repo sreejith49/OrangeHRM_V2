@@ -50,6 +50,21 @@ public class Employee extends Core{
 		
 		return lookupElement;
 	}
+	
+	
+	public static void addEmployee(String firstName, String lastName){
+		
+		try {
+			
+			driver.findElement(By.id("firstName")).sendKeys(firstName);
+			driver.findElement(By.id("lastName")).sendKeys(lastName);
+			
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
 
 	
 }
