@@ -10,6 +10,8 @@ import org.testng.asserts.SoftAssert;
 import org.testng.log4testng.Logger;
 
 import com.orangehrm.org.pim.Employee;
+import com.orangehrm.org.test.RetrieveExcelData;
+import com.orangehrm.org.test.testData;
 
 public class AppUtilities extends Core{
 	
@@ -149,7 +151,9 @@ public class AppUtilities extends Core{
 				element.sendKeys(arrActionOrText[1]);
 				
 			}else if(arrActionOrText[0].equalsIgnoreCase("remove")){
-				Employee.selectAnEmployee(element, arrActionOrText[1]);
+				Employee.selectAnEmployee(element, testData.getTestDataListFromMap(RetrieveExcelData.testData, arrActionOrText[1]).get(1));
+			}else if(arrActionOrText[0].equalsIgnoreCase("addEmployee")){
+				Employee.addEmployee(testData.getTestDataListFromMap(RetrieveExcelData.testData, arrActionOrText[1]).get(1), testData.getTestDataListFromMap(RetrieveExcelData.testData, arrActionOrText[1]).get(2));
 			}
 			
 		} catch (Exception e) {

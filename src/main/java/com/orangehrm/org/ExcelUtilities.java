@@ -2,11 +2,14 @@ package com.orangehrm.org;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ExcelUtilities {
@@ -96,6 +99,111 @@ public class ExcelUtilities {
 		
 		return cellData;
 		
+	}
+	
+	public static String[][] convertExcelData(Sheet sheet){
+		
+		String[][] str = null;
+		
+		try {	
+			
+			
+			int rowCount = sheet.getPhysicalNumberOfRows();
+			int columnCount = ExcelUtilities.getExcelRow(sheet, 1).getPhysicalNumberOfCells();
+			str = new String[rowCount][columnCount];
+			
+			for (int row = 0; row < rowCount; row++) {
+				
+				columnCount = ExcelUtilities.getExcelRow(sheet, row).getPhysicalNumberOfCells();
+				
+				for (int column = 0; column < columnCount; column++) {
+					
+					str[row][column] = ExcelUtilities.getCellData(sheet, row, column);
+					
+				}
+				
+			}		
+			
+			
+		
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return str;
+	}
+	
+	public static String[][] convertExcelData(Sheet sheet, int startrownum){
+		
+		String[][] str = null;
+		
+		try {	
+			
+			List<String> lstr = new LinkedList<String>();
+			int rowCount = sheet.getPhysicalNumberOfRows();
+			int columnCount = ExcelUtilities.getExcelRow(sheet, 1).getPhysicalNumberOfCells();
+			str = new String[rowCount-startrownum][columnCount];
+			int arrayrownum =0;
+			for (int row = startrownum; row < rowCount; row++) {
+				
+				columnCount = ExcelUtilities.getExcelRow(sheet, row).getPhysicalNumberOfCells();
+				
+				for (int column = 0; column < columnCount; column++) {
+					
+					str[arrayrownum][column] = ExcelUtilities.getCellData(sheet, row, column);
+					lstr.add(ExcelUtilities.getCellData(sheet, row, column));
+				}
+				
+				arrayrownum++;
+			}	
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return str;
+	}
+	
+	public static Map<String, List<String>> insertExcelDataInToMap(Sheet sheet, int columnindexofmapkeyvalue){
+		
+		Map<String, List<String>> map= null;
+		List<String> lstr = null;
+		
+		try {	
+			
+			map = new LinkedHashMap<String, List<String>>();
+			
+			int skip =0;
+			for (int row = 0; row < sheet.getPhysicalNumberOfRows(); row++) {
+				lstr = new LinkedList<String>();
+				int columnCount = ExcelUtilities.getExcelRow(sheet, row).getPhysicalNumberOfCells();
+				
+				for (int column = 0; column < columnCount; column++) {
+					
+					if(ExcelUtilities.getCellData(sheet, row, column) != "")
+						lstr.add(ExcelUtilities.getCellData(sheet, row, column));
+					else
+						skip=1;
+					
+					
+				}
+				
+				if(skip != 1)
+					map.put(lstr.get(0), lstr);
+				
+				skip=0;
+			}			
+		
+			
+			
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return map;
 	}
 
 }

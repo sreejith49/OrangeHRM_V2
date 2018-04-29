@@ -7,7 +7,7 @@ import org.testng.annotations.BeforeSuite;
 
 public class Core {
 	
-	static WebDriver driver;
+	public static WebDriver driver;
 	
 	@BeforeSuite
 	public void SetUp(){
@@ -23,7 +23,7 @@ public class Core {
 			
 	}
 	
-	@AfterSuite
+	//@AfterSuite
 	public void TearDown(){
 		if(driver !=null){
 			driver.close();
