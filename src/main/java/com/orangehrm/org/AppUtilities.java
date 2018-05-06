@@ -1,14 +1,17 @@
 package com.orangehrm.org;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.asserts.SoftAssert;
-import org.testng.log4testng.Logger;
 
+import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.markuputils.ExtentColor;
+import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.orangehrm.org.pim.Employee;
 import com.orangehrm.org.test.RetrieveExcelData;
 import com.orangehrm.org.test.testData;
@@ -18,10 +21,11 @@ public class AppUtilities extends Core{
 	//Logger logg = Logger.getLogger(this.getClass());
 	
 	static String ObjectRepoFilePath = "./ObjRepo.properties"; 
+	static String prevTestDetails = "";
 	
 	static SoftAssert sAssert = new SoftAssert(); 
 	
-	private static WebElement identifyElement(String identifierType, String identifier){
+	private static WebElement identifyElement(String identifierType, String identifier ){
 		
 		WebElement element = null;
 		
@@ -56,7 +60,9 @@ public class AppUtilities extends Core{
 			
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			
+			logger.log(Status.FAIL, MarkupHelper.createLabel("failed in object identification", ExtentColor.RED));
+			logger.createNode(e.getMessage());
 		}
 		
 		return element;
@@ -120,11 +126,15 @@ public class AppUtilities extends Core{
 		}
 	}
 	
-	public static void executeObjectAction(String object, String actionOrText){
+	public static void executeObjectAction(String object, String actionOrText, String TestDetails){
 		//String object example is login.textbox.username.id
 		//String actionOrText example is Click or username
 		try {
 			
+			if(prevTestDetails!=TestDetails)
+				logger = extent.createTest(TestDetails);
+			
+			logger.createNode(object+" > "+actionOrText);
 			WebElement element;
 			String[] arrObject = object.split("\\.");
 			String[] arrActionOrText = actionOrText.split("\\.");
@@ -153,12 +163,24 @@ public class AppUtilities extends Core{
 			}else if(arrActionOrText[0].equalsIgnoreCase("remove")){
 				Employee.selectAnEmployee(element, testData.getTestDataListFromMap(RetrieveExcelData.testData, arrActionOrText[1]).get(1));
 			}else if(arrActionOrText[0].equalsIgnoreCase("addEmployee")){
-				Employee.addEmployee(testData.getTestDataListFromMap(RetrieveExcelData.testData, arrActionOrText[1]).get(1), testData.getTestDataListFromMap(RetrieveExcelData.testData, arrActionOrText[1]).get(2));
+				Employee.addEmployee(testData.getTestDataListFromMap(RetrieveExcelData.testData, arrActionOrText[1]).get(1), 
+						testData.getTestDataListFromMap(RetrieveExcelData.testData, arrActionOrText[1]).get(2),
+						testData.getTestDataListFromMap(RetrieveExcelData.testData, arrActionOrText[1]).get(3),
+						testData.getTestDataListFromMap(RetrieveExcelData.testData, arrActionOrText[1]).get(4),logger);
 			}
 			
+			prevTestDetails = TestDetails;
+			logger.log(Status.PASS, MarkupHelper.createLabel("Test Case Passed is passTest", ExtentColor.GREEN));
+			
+			
 		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			
+			prevTestDetails = TestDetails;
+			logger.createNode(object+" > "+actionOrText+">"+e.getMessage());
+			logger.log(Status.FAIL, MarkupHelper.createLabel("Test Case failed", ExtentColor.RED));
+			//e.printStackTrace();
+			
+		} 
 	}
 	
 }

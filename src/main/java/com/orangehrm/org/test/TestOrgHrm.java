@@ -26,7 +26,7 @@ public class TestOrgHrm extends Core {
 	int Run_Mode = 5;
 	
 	
-	@Test
+	//@Test
 	public void RegressionSuite(){
 		
 		try {
@@ -34,7 +34,7 @@ public class TestOrgHrm extends Core {
 			Sheet scenarioSheet = ExcelUtilities.initiateSheet(ExcelUtilities.initiateWorkbook(new File("TestData/testData.xlsx")), "TestScenarios");
 			Sheet casesSheet = ExcelUtilities.initiateSheet(ExcelUtilities.initiateWorkbook(new File("TestData/testData.xlsx")), "TestCases");
 			
-			String[][] str = convertExcelData(casesSheet);
+			String[][] str = ExcelUtilities.convertExcelData(casesSheet);
 			
 			List<String> scenarioData;
 			List<String> casesData=null;
@@ -69,7 +69,7 @@ public class TestOrgHrm extends Core {
 					   String[] stepData = testStep[i].split("\\:");
 					   System.out.println(stepData[0]+":#:"+stepData[1]);
 					   
-					   AppUtilities.executeObjectAction(stepData[0], stepData[1]);
+					   //AppUtilities.executeObjectAction(stepData[0], stepData[1]);
 					
 				   }
 				   
@@ -88,7 +88,7 @@ public class TestOrgHrm extends Core {
 		
 	}
 	
-	public String[][] convertExcelData(Sheet sheet){
+	/*public String[][] convertExcelData(Sheet sheet){
 		
 		String[][] str = null;
 		
@@ -116,6 +116,6 @@ public class TestOrgHrm extends Core {
 		}
 		
 		return str;
-	}
+	}*/
 
 }

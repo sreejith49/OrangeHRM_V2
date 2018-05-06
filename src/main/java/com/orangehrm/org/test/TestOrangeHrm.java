@@ -65,7 +65,7 @@ public class TestOrangeHrm extends Core{
 									
 									String[] stepData = arrTestStep[i].split("\\:");
 									
-									AppUtilities.executeObjectAction(stepData[0], stepData[1]);
+									//AppUtilities.executeObjectAction(stepData[0], stepData[1]);
 									
 								}
 							}

@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Sheet;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 
 import com.orangehrm.org.AppUtilities;
@@ -46,6 +49,8 @@ public class RetrieveExcelData extends Core {
 				testSettings.put(testSettingData[rowindex][1], lvalue);
 			}
 			
+			
+			
 			testSettingData = null; //releasing 2d primitive array resource
 			
 			//##### read complete: testsettings.xlsx file #####
@@ -61,6 +66,7 @@ public class RetrieveExcelData extends Core {
 					
 					FileName = entry.getValue().get(0);
 					ObjectRepository = entry.getValue().get(1);
+					Core.ObjectRepo = ObjectRepository;
 					
 					//##### read start: ts sheet #####
 					Sheet testScenarioSheet = ExcelUtilities.initiateSheet(ExcelUtilities.initiateWorkbook(new File("TestData/"+FileName)), TestScenarioSheet);
@@ -139,7 +145,7 @@ public class RetrieveExcelData extends Core {
 											   String[] stepData = testStep[i].split("\\:");
 											   System.out.println(stepData[0]+":#:"+stepData[1]);
 											   
-											   AppUtilities.executeObjectAction(stepData[0], stepData[1]);
+											   AppUtilities.executeObjectAction(stepData[0], stepData[1],tcentry.getValue().get(3));
 											
 										   }
 										   
@@ -165,6 +171,104 @@ public class RetrieveExcelData extends Core {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+	}
+	
+	//@Test
+	public void testDyn(){
+		
+		try {
+			List<WebElement> tablecust = driver.findElements(By.id("customers"));
+			List<String> str = new LinkedList<String>();
+			for (WebElement webElement : tablecust) {
+				
+				List<WebElement> tablerow = webElement.findElements(By.tagName("tr"));
+				
+				
+				
+				for (int i = 0; i < tablerow.size(); i++) {
+					
+					List<WebElement> tablecolumn = tablerow.get(i).findElements(By.tagName("td"));
+					
+					for (int j = 0; j < tablecolumn.size(); j++) {
+						
+						System.out.println(tablecolumn.get(j).getText());
+						
+						if(tablecolumn.get(j).getText().equalsIgnoreCase("Manu")){
+							
+							if(tablecolumn.get(j).getText()!=null)
+								str.add(tablecolumn.get(j).getText());
+							//System.out.println(tablecolumn.get(j).findElement(By.id("ohrmList_chkSelectAll")).getText());
+							tablecolumn.get(5).findElement(By.id("btn")).click();
+							Alert alert = driver.switchTo().alert();
+							alert.accept();
+							tablecolumn.get(0).findElement(By.cssSelector("input[type='checkbox']")).click();
+							
+							
+						}
+						
+						if(tablecolumn.get(j).getText().equalsIgnoreCase("Dell")){
+							
+							
+							//tablecolumn.get(1).findElement(By.cssSelector("input[type='checkbox']")).click();
+						}
+						
+					}
+					
+				}
+				
+			}
+			
+			
+			List<WebElement> divcollection = driver.findElements(By.id("SpecialPan"));
+			
+			for (int i = 0; i < divcollection.size(); i++) {
+				
+				System.out.println(divcollection.get(i).getText());
+				
+				if(divcollection.get(i).getText().contains("SH-0003")){
+					
+					List<WebElement> tbl = divcollection.get(i).findElements(By.id("customers"));
+					List<WebElement> tblrow = tbl.get(1).findElements(By.tagName("tr"));
+					List<WebElement> tblcolumn = tblrow.get(5).findElements(By.tagName("td"));
+					tblcolumn.get(1).findElement(By.cssSelector("input[type='checkbox']")).click();
+					
+					/*for (WebElement webElement : tbl) {
+						
+						List<WebElement> tblrow = webElement.findElements(By.tagName("tr"));
+						
+						for (int j = 0; j < tblrow.size(); j++) {
+							
+							List<WebElement> tblcolumn = webElement.findElements(By.tagName("td"));
+							
+							for (int k = 0; k < tblcolumn.size(); k++) {
+								
+								if(tblcolumn.get(k).getText().contains("Girish")){
+									
+									tblcolumn.get(k).findElement(By.cssSelector("input[type='checkbox']")).click();
+								}
+								
+							}
+							
+							
+						}
+					}*/
+					
+					
+					if(divcollection.get(i).getText().contains("Girish")){
+						System.out.println("::>>"+divcollection.get(i).getText());
+						//divcollection.get(i).findElement(By.cssSelector("input[type='checkbox']")).click();
+						//divcollection.get(i).findElement(By.tagName("input")).click();
+					}
+					
+				}
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
 		
 	}
 
